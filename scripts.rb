@@ -67,16 +67,27 @@ module Enumerable
 	end
 
 	# Returns new modified array
-	def my_map
+	def my_map(&my_proc)
 		new_array = []
-		for x in 0..self.size-1
-			new_array << yield(self[x])
+
+		if block_given?
+			for x in 0..self.size-1
+				new_array << yield(self[x])
+			end
+		elsif my_proc
+			for x in 0..self.size-1
+				new_array << my_proc.call(self[x])
+			end
+		else
+			for x in 0..self.size-1
+				new_array << self.to_a[x]
+			end
 		end
-		new_array
+		new_array	
 	end
 
 	# Returns a single value reduced from a collection of values
-	def my_inject(start_value)
+	def my_inject(start_value = 0)
 		for x in 0..self.size-1
 			start_value = yield(start_value, self[x])
 		end
